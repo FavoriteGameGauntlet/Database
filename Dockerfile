@@ -1,4 +1,8 @@
 FROM postgres:17-alpine
-COPY schemas/ /docker-entrypoint-initdb.d/
-COPY functions/ /tmp/functions/
-RUN find /tmp/functions -name '*.sql' | xargs cat > /docker-entrypoint-initdb.d/20_functions.sql
+COPY tables/ /docker-entrypoint-initdb.d/
+COPY functions/games/ /docker-entrypoint-initdb.d/
+COPY functions/points/ /docker-entrypoint-initdb.d/
+COPY functions/sysparams/ /docker-entrypoint-initdb.d/
+COPY functions/timers/ /docker-entrypoint-initdb.d/
+COPY functions/users/ /docker-entrypoint-initdb.d/
+COPY functions/wheel/ /docker-entrypoint-initdb.d/
