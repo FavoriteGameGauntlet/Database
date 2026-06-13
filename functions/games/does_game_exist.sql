@@ -1,0 +1,5 @@
+CREATE OR REPLACE FUNCTION does_game_exist(p_name TEXT)
+RETURNS BOOLEAN
+LANGUAGE sql AS $$
+    SELECT EXISTS (SELECT 1 FROM Games WHERE Name = p_name)
+$$;
