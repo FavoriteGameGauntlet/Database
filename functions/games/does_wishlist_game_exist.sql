@@ -1,11 +1,11 @@
-CREATE OR REPLACE FUNCTION does_wishlist_game_exist(p_user_id INTEGER, p_name TEXT)
+CREATE OR REPLACE FUNCTION does_wishlist_game_exist(_user_id INTEGER, _name TEXT)
 RETURNS BOOLEAN
 LANGUAGE sql AS $$
     SELECT EXISTS (
         SELECT 1
-        FROM UnplayedGames ug
+        FROM WishlistGames ug
             INNER JOIN Games g ON ug.GameId = g.Id
-        WHERE ug.UserId = p_user_id
-            AND g.Name = p_name
+        WHERE ug.UserId = _user_id
+            AND g.Name = _name
     )
 $$;

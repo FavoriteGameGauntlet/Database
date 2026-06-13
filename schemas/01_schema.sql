@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS GameHistory (
     FinishDate TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS UnplayedGames (
+CREATE TABLE IF NOT EXISTS WishlistGames (
     Id         SERIAL PRIMARY KEY,
     UserId     INTEGER NOT NULL REFERENCES Users (Id),
     GameId     INTEGER NOT NULL REFERENCES Games (Id),

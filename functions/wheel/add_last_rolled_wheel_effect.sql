@@ -1,5 +1,5 @@
-CREATE OR REPLACE FUNCTION add_last_rolled_wheel_effect(p_user_id INTEGER, p_effect_id INTEGER, p_position INTEGER)
+CREATE OR REPLACE FUNCTION add_last_rolled_wheel_effect(_user_id INTEGER, _effect_id INTEGER, _position INTEGER)
 RETURNS void
 LANGUAGE sql AS $$
-    INSERT INTO LastWheelEffects (UserId, WheelEffectId, Position) VALUES (p_user_id, p_effect_id, p_position)
+    INSERT INTO LastWheelEffects (UserId, WheelEffectId, Position) VALUES (_user_id, _effect_id, _position)
 $$;
