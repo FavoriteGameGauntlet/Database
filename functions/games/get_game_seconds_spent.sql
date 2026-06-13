@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION get_game_seconds_spent(p_user_id INTEGER, p_game_id INTEGER)
+CREATE OR REPLACE FUNCTION get_game_seconds_spent(_user_id INTEGER, _game_id INTEGER)
 RETURNS INTEGER
 LANGUAGE sql AS $$
     SELECT COALESCE(
@@ -14,6 +14,6 @@ LANGUAGE sql AS $$
         0
     )
     FROM Timers t
-    WHERE t.UserId = p_user_id
-        AND t.GameId = p_game_id
+    WHERE t.UserId = _user_id
+        AND t.GameId = _game_id
 $$;

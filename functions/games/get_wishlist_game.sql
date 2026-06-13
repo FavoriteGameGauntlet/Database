@@ -1,5 +1,5 @@
-CREATE OR REPLACE FUNCTION get_wishlist_game(p_name TEXT)
+CREATE OR REPLACE FUNCTION get_wishlist_game(_name TEXT)
 RETURNS TABLE(id INTEGER, name TEXT)
 LANGUAGE sql AS $$
-    SELECT Id, Name FROM Games WHERE Name = p_name
+    SELECT Id, Name FROM Games WHERE Name = _name
 $$;
