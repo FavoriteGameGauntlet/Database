@@ -1,9 +1,7 @@
 services:
   fgg-db:
-    image: fgg-db
+    image: postgres:17-alpine
     container_name: fgg-db
-    build:
-      context: .
     ports:
       - "5432:5432"
     environment:
@@ -13,6 +11,31 @@ services:
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - fgg-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  atlas:
+    image: arigaio/atlas:latest-community
+    profiles:
+      - tools
+    environment:
+      ATLAS_DB_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@fgg-db:5432/${POSTGRES_DB}?sslmode=disable"
+      ATLAS_DEV_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@fgg-db:5432/atlas_dev?sslmode=disable"
+    volumes:
+      - ./tables:/tables:ro
+      - ./functions:/functions:ro
+      - ./migrations:/migrations
+      - ./atlas.hcl:/atlas.hcl:ro
+    working_dir: /
+    depends_on:
+      fgg-db:
+        condition: service_healthy
     networks:
       - fgg-network
 
