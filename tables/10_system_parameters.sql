@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS SystemParameters (
     Id    SERIAL PRIMARY KEY,
     Name  TEXT NOT NULL UNIQUE,
-    Value TEXT NOT NULL
+    Value TEXT NOT NULL,
+    ShouldShowToApp BOOLEAN NOT NULL
 );
