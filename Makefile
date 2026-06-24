@@ -1,17 +1,20 @@
 include .env
 export
 
-.PHONY: dev init diff apply
+.PHONY: init-update-dev init-update-prod update-prod diff apply
 
 DEV_URL=jdbc:postgresql://$(DEV_DB_HOST):$(DEV_DB_PORT)/$(DEV_DB_NAME)
 PROD_URL=jdbc:postgresql://$(PROD_DB_HOST):$(PROD_DB_PORT)/$(PROD_DB_NAME)
 
-dev:
+init-update-dev:
 	docker compose up -d fgg-db-dev
 	liquibase --url=$(DEV_URL) --username=$(DEV_DB_USER) --password=$(DEV_DB_PASSWORD) update
 
-init:
+init-update-prod:
 	docker compose up -d fgg-db
+	liquibase --url=$(PROD_URL) --username=$(PROD_DB_USER) --password=$(PROD_DB_PASSWORD) update
+
+update-prod:
 	liquibase --url=$(PROD_URL) --username=$(PROD_DB_USER) --password=$(PROD_DB_PASSWORD) update
 
 diff:
