@@ -7,6 +7,7 @@ DEV_URL=jdbc:postgresql://$(DEV_DB_HOST):$(DEV_DB_PORT)/$(DEV_DB_NAME)
 PROD_URL=jdbc:postgresql://$(PROD_DB_HOST):$(PROD_DB_PORT)/$(PROD_DB_NAME)
 
 init-update-dev:
+	docker compose down fgg-db-dev
 	docker compose up -d fgg-db-dev
 	liquibase --url=$(DEV_URL) --username=$(DEV_DB_USER) --password=$(DEV_DB_PASSWORD) update
 
