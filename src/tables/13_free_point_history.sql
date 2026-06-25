@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS FreePointHistory
   ChangeValue          INTEGER   NOT NULL,
   ActualChangeValue    INTEGER   NOT NULL,
   FinalValue           INTEGER   NOT NULL CHECK (FinalValue >= 0),
-  WheelEffectId        INTEGER REFERENCES WheelEffectHistory (Id),
   WheelEffectHistoryId INTEGER REFERENCES WheelEffectHistory (Id),
   ChangeDate           TIMESTAMP NOT NULL DEFAULT NOW()
 );
