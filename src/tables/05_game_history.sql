@@ -3,6 +3,6 @@ CREATE TABLE IF NOT EXISTS GameHistory (
     UserId     INTEGER NOT NULL REFERENCES Users (Id),
     GameId     INTEGER NOT NULL REFERENCES Games (Id),
     State      TEXT NOT NULL DEFAULT 'started',
-    ChangeDate TIMESTAMP NOT NULL DEFAULT NOW(),
+    StartDate  TIMESTAMP NOT NULL DEFAULT NOW(),
     FinishDate TIMESTAMP
 );
