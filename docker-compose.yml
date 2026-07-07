@@ -14,20 +14,6 @@ services:
     networks:
       - fgg-network
 
-  fgg-db-dev:
-    image: postgres:17-alpine
-    container_name: fgg-db-dev
-    ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_DB: ${DEV_DB_NAME}
-      POSTGRES_USER: ${DEV_DB_USER}
-      POSTGRES_PASSWORD: ${DEV_DB_PASSWORD}
-    volumes:
-      - ./data/postgres-dev:/var/lib/postgresql/data
-    networks:
-      - fgg-network
-
 networks:
   fgg-network:
     name: fgg-network
