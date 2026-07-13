@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS WishlistGames (
-    Id         SERIAL PRIMARY KEY,
-    UserId     INTEGER NOT NULL REFERENCES Users (Id),
-    GameId     INTEGER NOT NULL REFERENCES Games (Id),
-    CreateDate TIMESTAMP NOT NULL DEFAULT NOW()
-);
