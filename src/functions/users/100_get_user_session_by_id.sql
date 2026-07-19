@@ -1,5 +1,10 @@
 CREATE OR REPLACE FUNCTION get_user_session_by_id(_id TEXT)
-RETURNS TABLE(id TEXT, userid INTEGER)
+  RETURNS TABLE (
+    id      TEXT,
+    user_id INTEGER
+  )
 LANGUAGE sql AS $$
-    SELECT Id, UserId FROM UserSessions WHERE Id = _id
+SELECT Id, UserId
+FROM common.UserSessions
+WHERE Id = _id
 $$;

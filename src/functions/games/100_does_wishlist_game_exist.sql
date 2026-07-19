@@ -1,11 +1,14 @@
-CREATE OR REPLACE FUNCTION does_wishlist_game_exist(_user_id INTEGER, _name TEXT)
-RETURNS BOOLEAN
-LANGUAGE sql AS $$
-    SELECT EXISTS (
-        SELECT 1
-        FROM WishlistGames ug
-            INNER JOIN Games g ON ug.GameId = g.Id
-        WHERE ug.UserId = _user_id
-            AND g.Name = _name
-    )
+CREATE OR REPLACE FUNCTION does_wishlist_game_exist(
+  _user_id INTEGER,
+  _party_id INTEGER,
+  _game_id INTEGER
+)
+  RETURNS BOOLEAN
+  LANGUAGE sql AS
+$$
+SELECT EXISTS (SELECT 1
+               FROM users.WishlistGames
+               WHERE UserId = _user_id
+                 AND PartyId = _party_id
+                 AND GameId = _game_id)
 $$;
