@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION get_item_history(
     party_id        INTEGER,
     item_id         INTEGER,
     action          TEXT,
-    user_effect_id  INTEGER,
+    uses_left       INTEGER,
     source_event_id INTEGER,
     created_date    TIMESTAMP
   )
@@ -20,7 +20,7 @@ SELECT ih.Id,
        ih.PartyId,
        ih.ItemId,
        he.Action,
-       ih.UserEffectId,
+       ih.UsesLeft,
        he.SourceEventId,
        he.CreatedDate
 FROM users.ItemHistory ih

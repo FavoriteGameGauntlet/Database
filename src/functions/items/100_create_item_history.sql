@@ -2,16 +2,16 @@ CREATE OR REPLACE FUNCTION create_item_history(
   _user_id INTEGER,
   _party_id INTEGER,
   _item_id INTEGER,
-  _user_effect_id INTEGER,
+  _uses_left INTEGER,
   _source_event_id INTEGER
 )
   RETURNS TABLE (
-    id             INTEGER,
-    user_id        INTEGER,
-    party_id       INTEGER,
-    item_id        INTEGER,
-    user_effect_id INTEGER,
-    used_date      TIMESTAMP
+    id           INTEGER,
+    user_id      INTEGER,
+    party_id     INTEGER,
+    item_id      INTEGER,
+    uses_left    INTEGER,
+    used_date    TIMESTAMP
   )
   LANGUAGE sql
 AS
@@ -23,10 +23,10 @@ WITH
       RETURNING Id, UserId, PartyId, CreatedDate),
 
   item_history AS (
-    INSERT INTO users.ItemHistory (Id, PartyId, ItemId, UserEffectId)
-      SELECT he.Id, he.PartyId, _item_id, _user_effect_id
+    INSERT INTO users.ItemHistory (Id, PartyId, ItemId, UsesLeft)
+      SELECT he.Id, he.PartyId, _item_id, _uses_left
       FROM history_event he)
 
-SELECT Id, UserId, PartyId, _item_id, _user_effect_id, CreatedDate
+SELECT Id, UserId, PartyId, _item_id, _uses_left, CreatedDate
 FROM history_event
 $$;

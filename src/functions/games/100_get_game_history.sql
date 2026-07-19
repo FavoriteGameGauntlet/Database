@@ -3,16 +3,16 @@ CREATE OR REPLACE FUNCTION get_game_history(
   _party_id INTEGER
 )
   RETURNS TABLE (
-    id               INTEGER,
-    game_id          INTEGER,
-    name             TEXT,
-    action           TEXT,
-    time_spent_delta INTERVAL,
-    rating           INTEGER,
-    review_comment   TEXT,
-    end_state        TEXT,
-    source_event_id  INTEGER,
-    created_date     TIMESTAMP
+    id              INTEGER,
+    game_id         INTEGER,
+    name            TEXT,
+    action          TEXT,
+    time_spent      INTERVAL,
+    rating          INTEGER,
+    review_comment  TEXT,
+    end_state       TEXT,
+    source_event_id INTEGER,
+    created_date    TIMESTAMP
   )
   LANGUAGE sql
 AS
@@ -21,7 +21,7 @@ SELECT gh.Id,
        gh.GameId,
        g.Name,
        he.Action,
-       gh.TimeSpentDelta,
+       gh.TimeSpent,
        gh.Rating,
        gh.ReviewComment,
        gh.EndState,

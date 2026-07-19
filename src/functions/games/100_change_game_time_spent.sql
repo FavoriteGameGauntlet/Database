@@ -9,19 +9,25 @@ CREATE OR REPLACE FUNCTION change_game_time_spent(
   LANGUAGE sql AS
 $$
 WITH
+  updated_game AS (
+    UPDATE users.Games
+      SET TimeSpent = TimeSpent + _change_value
+      WHERE UserId = _user_id
+        AND PartyId = _party_id
+        AND GameId = _game_id
+      RETURNING TimeSpent),
+
   history_event AS (
     INSERT INTO users.HistoryEvents (UserId, PartyId, Type, Action, SourceEventId)
-      VALUES (_user_id, _party_id, 'game', 'changed', _source_event_id)
+      SELECT _user_id, _party_id, 'game', 'changed', _source_event_id
+      FROM updated_game
       RETURNING Id, PartyId),
 
   game_history AS (
-    INSERT INTO users.GameHistory (Id, PartyId, GameId, TimeSpentDelta)
-      SELECT he.Id, he.PartyId, _game_id, _change_value
-      FROM history_event he)
+    INSERT INTO users.GameHistory (Id, PartyId, GameId, TimeSpent)
+      SELECT he.Id, he.PartyId, _game_id, ug.TimeSpent
+      FROM history_event he,
+           updated_game ug)
 
-UPDATE users.Games
-SET TimeSpent = TimeSpent + _change_value
-WHERE UserId = _user_id
-  AND PartyId = _party_id
-  AND GameId = _game_id
+SELECT 1
 $$;

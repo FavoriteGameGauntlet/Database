@@ -8,20 +8,24 @@ CREATE OR REPLACE FUNCTION finish_user_game(
   LANGUAGE sql AS
 $$
 WITH
+  deleted_game AS (
+    DELETE FROM users.Games
+      WHERE UserId = _user_id
+        AND PartyId = _party_id
+        AND GameId = _game_id
+      RETURNING UserId, PartyId, TimeSpent),
+
   history_event AS (
     INSERT INTO users.HistoryEvents (UserId, PartyId, Type, Action, SourceEventId)
-      VALUES (_user_id, _party_id, 'game', 'removed', _source_event_id)
+      SELECT UserId, PartyId, 'game', 'removed', _source_event_id
+      FROM deleted_game
       RETURNING Id, PartyId),
 
   game_history AS (
-    INSERT INTO users.GameHistory (Id, PartyId, GameId, EndState)
-      SELECT he.Id, he.PartyId, _game_id, 'finished'
-      FROM history_event he)
+    INSERT INTO users.GameHistory (Id, PartyId, GameId, TimeSpent, EndState)
+      SELECT he.Id, he.PartyId, _game_id, dg.TimeSpent, 'finished'
+      FROM history_event he,
+           deleted_game dg)
 
-UPDATE users.Games
-SET State        = 'finished',
-    FinishedDate = NOW()
-WHERE UserId = _user_id
-  AND PartyId = _party_id
-  AND GameId = _game_id
+SELECT 1
 $$;

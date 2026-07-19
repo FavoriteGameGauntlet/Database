@@ -15,7 +15,7 @@ WITH
       RETURNING Id, PartyId),
 
   effect_history AS (
-    INSERT INTO users.EffectHistory (Id, PartyId, EffectId, NewUsesLeft)
+    INSERT INTO users.EffectHistory (Id, PartyId, EffectId, UsesLeft)
       SELECT he.Id, he.PartyId, _effect_id, _uses_left
       FROM history_event he)
 

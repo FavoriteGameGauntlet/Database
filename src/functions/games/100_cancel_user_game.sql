@@ -9,14 +9,11 @@ CREATE OR REPLACE FUNCTION cancel_user_game(
 $$
 WITH
   cancelled_game AS (
-    UPDATE users.Games
-      SET State = 'cancelled',
-        FinishedDate = NOW()
+    DELETE FROM users.Games
       WHERE UserId = _user_id
         AND PartyId = _party_id
         AND GameId = _game_id
-        AND State = 'current'
-      RETURNING UserId, PartyId),
+      RETURNING UserId, PartyId, TimeSpent),
 
   history_event AS (
     INSERT INTO users.HistoryEvents (UserId, PartyId, Type, Action, SourceEventId)
@@ -25,9 +22,10 @@ WITH
       RETURNING Id, PartyId),
 
   game_history AS (
-    INSERT INTO users.GameHistory (Id, PartyId, GameId, EndState)
-      SELECT he.Id, he.PartyId, _game_id, 'cancelled'
-      FROM history_event he)
+    INSERT INTO users.GameHistory (Id, PartyId, GameId, TimeSpent, EndState)
+      SELECT he.Id, he.PartyId, _game_id, cg.TimeSpent, 'cancelled'
+      FROM history_event he,
+           cancelled_game cg)
 
 SELECT 1
 $$;

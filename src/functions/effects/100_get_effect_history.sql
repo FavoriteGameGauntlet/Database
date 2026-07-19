@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION get_effect_history(
     use_count       INTEGER,
     duration        INTERVAL,
     action          TEXT,
-    new_uses_left   INTEGER,
+    uses_left       INTEGER,
     source_event_id INTEGER,
     created_date    TIMESTAMP
   )
@@ -28,7 +28,7 @@ SELECT eh.Id,
        e.UseCount,
        e.Duration,
        he.Action,
-       eh.NewUsesLeft,
+       eh.UsesLeft,
        he.SourceEventId,
        he.CreatedDate
 FROM users.EffectHistory eh

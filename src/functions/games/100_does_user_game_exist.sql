@@ -8,6 +8,5 @@ $$
 SELECT EXISTS (SELECT 1
                FROM users.Games
                WHERE UserId = _user_id
-                 AND PartyId = _party_id
-                 AND State = 'current')
+                 AND PartyId = _party_id)
 $$;

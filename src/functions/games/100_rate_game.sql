@@ -15,15 +15,18 @@ WITH
       VALUES (_user_id, _party_id, 'game', 'changed', _source_event_id)
       RETURNING Id, PartyId),
 
-  game_history AS (
-    INSERT INTO users.GameHistory (Id, PartyId, GameId, Rating, ReviewComment)
-      SELECT he.Id, he.PartyId, _game_id, _rating, _review_comment
-      FROM history_event he)
+  last_time_spent AS (
+    SELECT gh.TimeSpent
+    FROM users.GameHistory gh
+           INNER JOIN users.HistoryEvents he ON he.Id = gh.Id AND he.PartyId = gh.PartyId
+    WHERE he.UserId = _user_id
+      AND he.PartyId = _party_id
+      AND gh.GameId = _game_id
+    ORDER BY he.CreatedDate DESC
+    LIMIT 1)
 
-UPDATE users.Games
-SET Rating        = _rating,
-    ReviewComment = _review_comment
-WHERE UserId = _user_id
-  AND PartyId = _party_id
-  AND GameId = _game_id
+INSERT INTO users.GameHistory (Id, PartyId, GameId, TimeSpent, Rating, ReviewComment)
+SELECT he.Id, he.PartyId, _game_id, COALESCE(lts.TimeSpent, INTERVAL '0'), _rating, _review_comment
+FROM history_event he
+       LEFT JOIN last_time_spent lts ON TRUE
 $$;
