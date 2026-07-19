@@ -1,5 +1,19 @@
-CREATE OR REPLACE FUNCTION get_system_parameter(_name TEXT)
-RETURNS TABLE(id INTEGER, name TEXT, value TEXT, should_show_to_app BOOLEAN)
-LANGUAGE sql AS $$
-    SELECT Id, Name, Value, ShouldShowToApp FROM SystemParameters WHERE Name = _name
+CREATE OR REPLACE FUNCTION get_system_parameter(
+  _party_id INTEGER,
+  _code TEXT
+)
+  RETURNS TABLE (
+    id          INTEGER,
+    code        TEXT,
+    name        TEXT,
+    description TEXT,
+    value       TEXT
+  )
+  LANGUAGE sql
+AS
+$$
+SELECT sp.Id, sp.Code, sp.Name, sp.Description, COALESCE(psp.Value, sp.DefaultValue) AS Value
+FROM defaults.SystemParameters sp
+       LEFT JOIN party.SystemParameters psp ON psp.SystemParameterId = sp.Id AND psp.PartyId = _party_id
+WHERE sp.Code = _code
 $$;
