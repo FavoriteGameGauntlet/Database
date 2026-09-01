@@ -18,3 +18,6 @@ CREATE TABLE IF NOT EXISTS users.HistoryEvents (
       OR (Type IN ('effect', 'item', 'perk', 'game'))
     )
 );
+
+CREATE INDEX IF NOT EXISTS HistoryEventsUserIdPartyIdIdx
+  ON users.HistoryEvents (UserId, PartyId);

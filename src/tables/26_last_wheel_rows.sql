@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS users.LastWheelRows
   Position   INTEGER   NOT NULL,
   RolledDate TIMESTAMP NOT NULL DEFAULT NOW(),
 
-  UNIQUE (UserId, PartyId, WheelRowId),
   FOREIGN KEY (WheelRowId, PartyId) REFERENCES party.WheelRows (Id, PartyId)
 );
+
+CREATE INDEX IF NOT EXISTS LastWheelRowsUserIdPartyIdWheelRowIdIdx
+  ON users.LastWheelRows (UserId, PartyId, WheelRowId);
