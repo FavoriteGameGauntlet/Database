@@ -12,7 +12,7 @@ $$
 SELECT gh.ReviewComment
 FROM users.GameHistory gh
        INNER JOIN users.HistoryEvents he ON he.Id = gh.Id AND he.PartyId = gh.PartyId
-WHERE he.UserId = _user_id
+WHERE he.AffectedUserId = _user_id
   AND gh.PartyId = _party_id
   AND gh.GameId = _game_id
   AND gh.ReviewComment IS NOT NULL

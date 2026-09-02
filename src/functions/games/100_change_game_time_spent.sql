@@ -3,6 +3,7 @@ CREATE OR REPLACE FUNCTION change_game_time_spent(
   _party_id INTEGER,
   _game_id INTEGER,
   _change_value INTERVAL,
+  _actor_user_id INTEGER,
   _source_event_id INTEGER
 )
   RETURNS void
@@ -18,8 +19,8 @@ WITH
       RETURNING TimeSpent),
 
   history_event AS (
-    INSERT INTO users.HistoryEvents (UserId, PartyId, Type, Action, SourceEventId)
-      SELECT _user_id, _party_id, 'game', 'changed', _source_event_id
+    INSERT INTO users.HistoryEvents (AffectedUserId, ActorUserId, PartyId, Type, Action, SourceEventId)
+      SELECT _user_id, _actor_user_id, _party_id, 'game', 'changed', _source_event_id
       FROM updated_game
       RETURNING Id, PartyId),
 

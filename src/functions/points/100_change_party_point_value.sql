@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION change_party_point_value(
   RETURNS void
   LANGUAGE sql AS
 $$
-UPDATE party.Points
+UPDATE shared.Points
 SET Value = Value + _change_value
 WHERE PartyId = _party_id
   AND PointTypeId = _point_type_id

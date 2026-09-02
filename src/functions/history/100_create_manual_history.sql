@@ -6,12 +6,12 @@ CREATE OR REPLACE FUNCTION create_manual_history(
 )
   RETURNS TABLE
   (
-    id            INTEGER,
-    user_id       INTEGER,
-    party_id      INTEGER,
-    actor_user_id INTEGER,
-    change_id     INTEGER,
-    created_date  TIMESTAMP
+    id               INTEGER,
+    affected_user_id INTEGER,
+    party_id         INTEGER,
+    actor_user_id    INTEGER,
+    change_id        INTEGER,
+    created_date     TIMESTAMP
   )
   LANGUAGE sql
 AS
@@ -23,18 +23,18 @@ WITH
                      FROM jsonb_array_elements(_entries) AS entry),
 
   history_event AS (
-    INSERT INTO users.HistoryEvents (UserId, PartyId, Type, Action, SourceEventId)
-      SELECT au.user_id, _party_id, 'manual', 'added', _source_event_id
+    INSERT INTO users.HistoryEvents (AffectedUserId, ActorUserId, PartyId, Type, Action, SourceEventId)
+      SELECT au.user_id, _actor_user_id, _party_id, 'manual', 'added', _source_event_id
       FROM affected_users au
-      RETURNING Id, UserId, PartyId, CreatedDate),
+      RETURNING Id, AffectedUserId, ActorUserId, PartyId, CreatedDate),
 
   manual_history AS (
-    INSERT INTO users.ManualHistory (Id, PartyId, UserId, ChangeId)
-      SELECT he.Id, he.PartyId, _actor_user_id, c.change_id
+    INSERT INTO users.ManualHistory (Id, PartyId, ChangeId)
+      SELECT he.Id, he.PartyId, c.change_id
       FROM history_event he,
            change c)
 
-SELECT he.Id, he.UserId, he.PartyId, _actor_user_id, c.change_id, he.CreatedDate
+SELECT he.Id, he.AffectedUserId, he.PartyId, he.ActorUserId, c.change_id, he.CreatedDate
 FROM history_event he,
      change c
 $$;

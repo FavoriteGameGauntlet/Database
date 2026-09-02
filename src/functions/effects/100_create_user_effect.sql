@@ -2,6 +2,7 @@ CREATE OR REPLACE FUNCTION create_user_effect(
   _user_id INTEGER,
   _party_id INTEGER,
   _effect_id INTEGER,
+  _actor_user_id INTEGER,
   _source_event_id INTEGER
 )
   RETURNS TABLE (
@@ -17,9 +18,9 @@ AS
 $$
 WITH
   history_event AS (
-    INSERT INTO users.HistoryEvents (UserId, PartyId, Type, Action, SourceEventId)
-      VALUES (_user_id, _party_id, 'effect', 'added', _source_event_id)
-      RETURNING Id, UserId, PartyId),
+    INSERT INTO users.HistoryEvents (AffectedUserId, ActorUserId, PartyId, Type, Action, SourceEventId)
+      VALUES (_user_id, _actor_user_id, _party_id, 'effect', 'added', _source_event_id)
+      RETURNING Id, AffectedUserId, PartyId),
 
   effect_history AS (
     INSERT INTO users.EffectHistory (Id, PartyId, EffectId)
@@ -28,7 +29,7 @@ WITH
 
   user_effect AS (
     INSERT INTO users.Effects (UserId, PartyId, EffectId, UsesLeft)
-      SELECT he.UserId, he.PartyId, _effect_id, e.UseCount
+      SELECT he.AffectedUserId, he.PartyId, _effect_id, e.UseCount
       FROM history_event he
              INNER JOIN party.Effects e ON e.Id = _effect_id AND e.PartyId = he.PartyId
       RETURNING Id, UserId, PartyId, EffectId, UsesLeft),

@@ -3,20 +3,20 @@ CREATE OR REPLACE FUNCTION get_item_history(
   _party_id INTEGER
 )
   RETURNS TABLE (
-    id              INTEGER,
-    user_id         INTEGER,
-    party_id        INTEGER,
-    item_id         INTEGER,
-    action          TEXT,
-    uses_left       INTEGER,
-    source_event_id INTEGER,
-    created_date    TIMESTAMP
+    id               INTEGER,
+    affected_user_id INTEGER,
+    party_id         INTEGER,
+    item_id          INTEGER,
+    action           TEXT,
+    uses_left        INTEGER,
+    source_event_id  INTEGER,
+    created_date     TIMESTAMP
   )
   LANGUAGE sql
 AS
 $$
 SELECT ih.Id,
-       he.UserId,
+       he.AffectedUserId,
        ih.PartyId,
        ih.ItemId,
        he.Action,
@@ -25,7 +25,7 @@ SELECT ih.Id,
        he.CreatedDate
 FROM users.ItemHistory ih
        INNER JOIN users.HistoryEvents he ON he.Id = ih.Id AND he.PartyId = ih.PartyId
-WHERE he.UserId = _user_id
+WHERE he.AffectedUserId = _user_id
   AND ih.PartyId = _party_id
 ORDER BY he.CreatedDate DESC
 $$;

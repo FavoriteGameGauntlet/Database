@@ -21,7 +21,7 @@ WHERE e.Id = ue.EffectId
               INNER JOIN users.HistoryEvents he ON he.Id = eh.Id AND he.PartyId = eh.PartyId
        WHERE eh.PartyId = ue.PartyId
          AND eh.EffectId = ue.EffectId
-         AND he.UserId = ue.UserId
+         AND he.AffectedUserId = ue.UserId
          AND he.Action = 'added'
        ORDER BY he.CreatedDate DESC
        LIMIT 1) + e.Duration <= NOW()

@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION get_party_point(
 AS
 $$
 SELECT Id, PartyId, PointTypeId, Value
-FROM party.Points
+FROM shared.Points
 WHERE PartyId = _party_id
   AND PointTypeId = _point_type_id
 $$;

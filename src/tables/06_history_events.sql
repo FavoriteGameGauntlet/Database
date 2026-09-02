@@ -1,11 +1,12 @@
 CREATE TABLE IF NOT EXISTS users.HistoryEvents (
-  Id            SERIAL PRIMARY KEY,
-  UserId        INTEGER                 NOT NULL REFERENCES common.Users (Id),
-  PartyId       INTEGER                 NOT NULL REFERENCES common.Parties (Id),
-  Type          users.HistoryEventType  NOT NULL,
-  Action        users.HistoryActionType NOT NULL,
-  SourceEventId INTEGER,
-  CreatedDate   TIMESTAMP               NOT NULL DEFAULT NOW(),
+  Id             SERIAL PRIMARY KEY,
+  AffectedUserId INTEGER REFERENCES common.Users (Id),
+  ActorUserId    INTEGER                 NOT NULL REFERENCES common.Users (Id),
+  PartyId        INTEGER                 NOT NULL REFERENCES common.Parties (Id),
+  Type           users.HistoryEventType  NOT NULL,
+  Action         users.HistoryActionType NOT NULL,
+  SourceEventId  INTEGER,
+  CreatedDate    TIMESTAMP               NOT NULL DEFAULT NOW(),
 
   UNIQUE (Id, PartyId),
   FOREIGN KEY (SourceEventId, PartyId) REFERENCES users.HistoryEvents (Id, PartyId),
@@ -16,8 +17,10 @@ CREATE TABLE IF NOT EXISTS users.HistoryEvents (
     (Type = 'point' AND Action = 'changed')
       OR (Type IN ('exchange', 'wheel_row', 'manual') AND Action = 'added')
       OR (Type IN ('effect', 'item', 'perk', 'game'))
-    )
+    ),
+
+  CHECK ( AffectedUserId IS NOT NULL OR Type IN ('point', 'manual') )
 );
 
-CREATE INDEX IF NOT EXISTS HistoryEventsUserIdPartyIdIdx
-  ON users.HistoryEvents (UserId, PartyId);
+CREATE INDEX IF NOT EXISTS HistoryEventsAffectedUserIdPartyIdIdx
+  ON users.HistoryEvents (AffectedUserId, PartyId);

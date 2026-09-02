@@ -1,23 +1,20 @@
-CREATE TABLE IF NOT EXISTS party.PointHistory (
-  Id                 SERIAL PRIMARY KEY,
-  PartyId            INTEGER   NOT NULL REFERENCES common.Parties (Id),
-  PointTypeId        INTEGER   NOT NULL,
-  SourceUserId       INTEGER   NOT NULL REFERENCES common.Users (Id),
-  DesiredChangeValue INTEGER   NOT NULL,
-  ActualChangeValue  INTEGER   NOT NULL,
-  FinalValue         INTEGER   NOT NULL,
-  SourceEventId      INTEGER   NOT NULL,
-  ChangedDate        TIMESTAMP NOT NULL DEFAULT NOW(),
+CREATE TABLE IF NOT EXISTS shared.PointHistory (
+  Id                 INTEGER PRIMARY KEY,
+  PartyId            INTEGER NOT NULL REFERENCES common.Parties (Id),
+  PointTypeId        INTEGER NOT NULL,
+  DesiredChangeValue INTEGER NOT NULL,
+  ActualChangeValue  INTEGER NOT NULL,
+  FinalValue         INTEGER NOT NULL,
 
-  FOREIGN KEY (PointTypeId, PartyId) REFERENCES party.PointTypes (Id, PartyId),
-  FOREIGN KEY (SourceEventId, PartyId) REFERENCES users.HistoryEvents (Id, PartyId)
+  UNIQUE (Id, PartyId),
+  FOREIGN KEY (Id, PartyId) REFERENCES users.HistoryEvents (Id, PartyId),
+  FOREIGN KEY (PointTypeId, PartyId) REFERENCES party.PointTypes (Id, PartyId)
 );
 
 CREATE TABLE IF NOT EXISTS users.PointHistory (
   Id                 INTEGER PRIMARY KEY,
   PartyId            INTEGER NOT NULL REFERENCES common.Parties (Id),
   PointTypeId        INTEGER NOT NULL,
-  SourceUserId       INTEGER NOT NULL REFERENCES common.Users (Id),
   DesiredChangeValue INTEGER NOT NULL,
   ActualChangeValue  INTEGER NOT NULL,
   FinalValue         INTEGER NOT NULL,

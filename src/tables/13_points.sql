@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS party.Points (
+CREATE TABLE IF NOT EXISTS shared.Points (
   Id          SERIAL PRIMARY KEY,
   PartyId     INTEGER NOT NULL REFERENCES common.Parties (Id),
   PointTypeId INTEGER NOT NULL,

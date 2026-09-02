@@ -3,6 +3,7 @@ CREATE OR REPLACE FUNCTION change_user_effect_uses_left(
   _party_id INTEGER,
   _effect_id INTEGER,
   _uses_left INTEGER,
+  _actor_user_id INTEGER,
   _source_event_id INTEGER
 )
   RETURNS void
@@ -10,8 +11,8 @@ CREATE OR REPLACE FUNCTION change_user_effect_uses_left(
 $$
 WITH
   history_event AS (
-    INSERT INTO users.HistoryEvents (UserId, PartyId, Type, Action, SourceEventId)
-      VALUES (_user_id, _party_id, 'effect', 'changed', _source_event_id)
+    INSERT INTO users.HistoryEvents (AffectedUserId, ActorUserId, PartyId, Type, Action, SourceEventId)
+      VALUES (_user_id, _actor_user_id, _party_id, 'effect', 'changed', _source_event_id)
       RETURNING Id, PartyId),
 
   effect_history AS (

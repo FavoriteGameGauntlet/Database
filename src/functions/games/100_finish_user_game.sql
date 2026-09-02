@@ -2,6 +2,7 @@ CREATE OR REPLACE FUNCTION finish_user_game(
   _user_id INTEGER,
   _party_id INTEGER,
   _game_id INTEGER,
+  _actor_user_id INTEGER,
   _source_event_id INTEGER
 )
   RETURNS void
@@ -16,8 +17,8 @@ WITH
       RETURNING UserId, PartyId, TimeSpent),
 
   history_event AS (
-    INSERT INTO users.HistoryEvents (UserId, PartyId, Type, Action, SourceEventId)
-      SELECT UserId, PartyId, 'game', 'removed', _source_event_id
+    INSERT INTO users.HistoryEvents (AffectedUserId, ActorUserId, PartyId, Type, Action, SourceEventId)
+      SELECT UserId, _actor_user_id, PartyId, 'game', 'removed', _source_event_id
       FROM deleted_game
       RETURNING Id, PartyId),
 

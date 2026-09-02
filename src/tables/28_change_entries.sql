@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS users.ChangeEntries (
   Id          SERIAL PRIMARY KEY,
   PartyId     INTEGER NOT NULL REFERENCES common.Parties (Id),
   ChangeId    INTEGER NOT NULL,
-  UserId      INTEGER NOT NULL REFERENCES common.Users (Id),
+  UserId      INTEGER REFERENCES common.Users (Id),
   Amount      INTEGER,
   PointTypeId INTEGER,
   ItemId      INTEGER,
@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS users.ChangeEntries (
   EffectId    INTEGER,
 
   CHECK ( num_nonnulls(PointTypeId, ItemId, PerkId, EffectId) = 1 ),
+  CHECK ( UserId IS NOT NULL OR PointTypeId IS NOT NULL ),
   FOREIGN KEY (ChangeId, PartyId) REFERENCES users.Changes (Id, PartyId),
   FOREIGN KEY (PointTypeId, PartyId) REFERENCES party.PointTypes (Id, PartyId),
   FOREIGN KEY (ItemId, PartyId) REFERENCES party.Items (Id, PartyId),

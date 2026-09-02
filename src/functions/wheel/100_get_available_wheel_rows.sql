@@ -36,7 +36,7 @@ WHERE wr.PartyId = _party_id
                              INNER JOIN users.HistoryEvents he
                                         ON he.Id = wrh.Id AND he.PartyId = wrh.PartyId
                       WHERE wrh.WheelRowId = wr.Id
-                        AND he.UserId = _user_id
+                        AND he.AffectedUserId = _user_id
                         AND wrh.PartyId = _party_id)
     )
   )
