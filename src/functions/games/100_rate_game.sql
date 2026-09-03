@@ -3,31 +3,33 @@ CREATE OR REPLACE FUNCTION rate_game(
   _party_id INTEGER,
   _game_id INTEGER,
   _rating INTEGER,
-  _review_comment TEXT,
-  _actor_user_id INTEGER,
-  _source_event_id INTEGER
+  _review_comment TEXT
 )
-  RETURNS void
-  LANGUAGE sql AS
+  RETURNS TABLE (
+    id             INTEGER,
+    user_id        INTEGER,
+    party_id       INTEGER,
+    game_id        INTEGER,
+    rating         INTEGER,
+    review_comment TEXT,
+    created_date   TIMESTAMP,
+    updated_date   TIMESTAMP
+  )
+  LANGUAGE sql
+AS
 $$
-WITH
-  history_event AS (
-    INSERT INTO users.HistoryEvents (AffectedUserId, ActorUserId, PartyId, Type, Action, SourceEventId)
-      VALUES (_user_id, _actor_user_id, _party_id, 'game', 'changed', _source_event_id)
-      RETURNING Id, PartyId),
-
-  last_time_spent AS (
-    SELECT gh.TimeSpent
-    FROM users.GameHistory gh
-           INNER JOIN users.HistoryEvents he ON he.Id = gh.Id AND he.PartyId = gh.PartyId
-    WHERE he.AffectedUserId = _user_id
-      AND he.PartyId = _party_id
-      AND gh.GameId = _game_id
-    ORDER BY he.CreatedDate DESC
-    LIMIT 1)
-
-INSERT INTO users.GameHistory (Id, PartyId, GameId, TimeSpent, Rating, ReviewComment)
-SELECT he.Id, he.PartyId, _game_id, COALESCE(lts.TimeSpent, INTERVAL '0'), _rating, _review_comment
-FROM history_event he
-       LEFT JOIN last_time_spent lts ON TRUE
+INSERT INTO users.GameRatings (UserId, PartyId, GameId, Rating, ReviewComment)
+SELECT _user_id, _party_id, _game_id, _rating, _review_comment
+WHERE EXISTS (SELECT 1
+              FROM users.GameHistory gh
+                     INNER JOIN users.HistoryEvents he ON he.Id = gh.Id AND he.PartyId = gh.PartyId
+              WHERE he.AffectedUserId = _user_id
+                AND gh.PartyId = _party_id
+                AND gh.GameId = _game_id
+                AND gh.EndState IS NOT NULL)
+ON CONFLICT (UserId, PartyId, GameId)
+  DO UPDATE SET Rating        = EXCLUDED.Rating,
+                ReviewComment = EXCLUDED.ReviewComment,
+                UpdatedDate   = NOW()
+RETURNING Id, UserId, PartyId, GameId, Rating, ReviewComment, CreatedDate, UpdatedDate
 $$;

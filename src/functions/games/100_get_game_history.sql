@@ -8,8 +8,6 @@ CREATE OR REPLACE FUNCTION get_game_history(
     name            TEXT,
     action          TEXT,
     time_spent      INTERVAL,
-    rating          INTEGER,
-    review_comment  TEXT,
     end_state       TEXT,
     source_event_id INTEGER,
     created_date    TIMESTAMP
@@ -22,8 +20,6 @@ SELECT gh.Id,
        g.Name,
        he.Action,
        gh.TimeSpent,
-       gh.Rating,
-       gh.ReviewComment,
        gh.EndState,
        he.SourceEventId,
        he.CreatedDate
