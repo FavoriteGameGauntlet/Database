@@ -1,3 +1,5 @@
+DROP FUNCTION IF EXISTS get_all_user_games(INTEGER);
+
 CREATE OR REPLACE FUNCTION get_all_user_games(
   _party_id INTEGER
 )
@@ -5,12 +7,13 @@ CREATE OR REPLACE FUNCTION get_all_user_games(
     id         INTEGER,
     name       TEXT,
     time_spent INTERVAL,
-    login      TEXT
+    login      TEXT,
+    start_date TIMESTAMP
   )
   LANGUAGE sql
 AS
 $$
-SELECT g.Id, g.Name, gh.TimeSpent, u.Login
+SELECT g.Id, g.Name, gh.TimeSpent, u.Login, gh.StartDate
 FROM users.Games gh
        INNER JOIN party.Games g ON g.Id = gh.GameId AND g.PartyId = gh.PartyId
        INNER JOIN common.Users u ON u.Id = gh.UserId

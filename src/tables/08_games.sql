@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users.Games (
   PartyId   INTEGER  NOT NULL REFERENCES common.Parties (Id),
   GameId    INTEGER  NOT NULL,
   TimeSpent INTERVAL NOT NULL DEFAULT INTERVAL '0' CHECK ( TimeSpent >= INTERVAL '0' ),
+  StartDate TIMESTAMP NOT NULL DEFAULT NOW(),
 
   UNIQUE (UserId, PartyId, GameId),
   FOREIGN KEY (GameId, PartyId) REFERENCES party.Games (Id, PartyId)

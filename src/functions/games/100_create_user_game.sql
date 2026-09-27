@@ -31,9 +31,8 @@ WITH
     INSERT INTO users.Games (UserId, PartyId, GameId)
       SELECT he.AffectedUserId, he.PartyId, _game_id
       FROM history_event he
-      RETURNING Id, UserId, PartyId, GameId, TimeSpent)
+      RETURNING Id, UserId, PartyId, GameId, TimeSpent, StartDate)
 
-SELECT g.Id, g.UserId, g.PartyId, g.GameId, g.TimeSpent, he.CreatedDate
-FROM game g,
-     history_event he
+SELECT g.Id, g.UserId, g.PartyId, g.GameId, g.TimeSpent, g.StartDate
+FROM game g
 $$;
