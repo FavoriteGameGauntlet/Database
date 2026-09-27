@@ -1,0 +1,21 @@
+INSERT INTO defaults.SystemParameters (Code, DefaultValue, Name, Description)
+VALUES ('MinimumNumberOfWishlistGames',        '3',       'MinimumNumberOfWishlistGames',        ''),
+       ('TimerDurationInS',                    '30',      'TimerDurationInS',                    ''),
+       ('TerritoryHourChangeByTimer',          '2',       'TerritoryHourChangeByTimer',          ''),
+       ('ExperiencePointChangeByTimer',        '2',       'ExperiencePointChangeByTimer',        ''),
+       ('ExperiencePointChangeByLevelUp',      '-10',     'ExperiencePointChangeByLevelUp',      ''),
+       ('ShouldLimitFreePoints',               '1',       'ShouldLimitFreePoints',               ''),
+       ('FreePointsMinimum',                   '0',       'FreePointsMinimum',                   ''),
+       ('TerritoryHourChangeBySeizeSlice',     '[-2,-4]', 'TerritoryHourChangeBySeizeSlice',     ''),
+       ('MinimumAvailableWheelEffectsForRoll', '5',       'MinimumAvailableWheelEffectsForRoll', ''),
+       ('SeizePenaltyPoints',                  '-1',      'SeizePenaltyPoints',                  ''),
+       ('TimerFinisherSchedulerIntervalInS',   '1',       'TimerFinisherSchedulerIntervalInS',   ''),
+       ('EffectFinisherSchedulerIntervalInS',  '1',       'EffectFinisherSchedulerIntervalInS',  ''),
+       ('MinimumAvailableRollCountForRoll',    '1',       'MinimumAvailableRollCountForRoll',    ''),
+       ('MaximumAvailableRollCountForTimer',   '999',     'MaximumAvailableRollCountForTimer',   ''),
+       ('AvailableRollChangeByTimer',          '1',       'AvailableRollChangeByTimer',          ''),
+       ('AvailableRollChangeByRoll',           '-1',      'AvailableRollChangeByRoll',           ''),
+       ('FreePointChangeByBaseTeleport',       '-3',      'FreePointChangeByBaseTeleport',       ''),
+       ('FreePointChangeBySandstorm',          '-1',      'FreePointChangeBySandstorm',          ''),
+       ('TerritoryPointChangeBySeizeSlice',    '[4,10]',  'TerritoryPointChangeBySeizeSlice',    '')
+ON CONFLICT (Code) DO NOTHING;
