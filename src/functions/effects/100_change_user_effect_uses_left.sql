@@ -1,3 +1,5 @@
+DROP FUNCTION IF EXISTS change_user_effect_uses_left(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER);
+
 CREATE OR REPLACE FUNCTION change_user_effect_uses_left(
   _user_id INTEGER,
   _party_id INTEGER,
@@ -6,7 +8,7 @@ CREATE OR REPLACE FUNCTION change_user_effect_uses_left(
   _actor_user_id INTEGER,
   _source_event_id INTEGER
 )
-  RETURNS void
+  RETURNS INTEGER
   LANGUAGE sql AS
 $$
 WITH
@@ -18,11 +20,16 @@ WITH
   effect_history AS (
     INSERT INTO users.EffectHistory (Id, PartyId, EffectId, UsesLeft)
       SELECT he.Id, he.PartyId, _effect_id, _uses_left
-      FROM history_event he)
+      FROM history_event he),
 
-UPDATE users.Effects
-SET UsesLeft = _uses_left
-WHERE UserId = _user_id
-  AND PartyId = _party_id
-  AND EffectId = _effect_id
+  updated_effect AS (
+    UPDATE users.Effects
+      SET UsesLeft = _uses_left
+      WHERE UserId = _user_id
+        AND PartyId = _party_id
+        AND EffectId = _effect_id
+        AND _uses_left > 0)
+
+SELECT Id
+FROM history_event
 $$;
