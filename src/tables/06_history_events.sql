@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users.HistoryEvents (
   UNIQUE (Id, PartyId),
   FOREIGN KEY (SourceEventId, PartyId) REFERENCES users.HistoryEvents (Id, PartyId),
 
-  CHECK ( Type IN ('manual', 'wheel_row', 'exchange') OR SourceEventId IS NOT NULL ),
+  CHECK ( Type <> 'point' OR SourceEventId IS NOT NULL ),
 
   CHECK (
     (Type = 'point' AND Action = 'changed')
