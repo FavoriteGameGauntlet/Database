@@ -7,9 +7,11 @@ CREATE OR REPLACE FUNCTION change_user_point_value(
   RETURNS void
   LANGUAGE sql AS
 $$
-UPDATE users.Points
-SET Value = Value + _change_value
-WHERE UserId = _user_id
+INSERT INTO users.Points (UserId, PartyId, PointTypeId, Value)
+SELECT _user_id, _party_id, Id, StartValue + _change_value
+FROM party.PointTypes
+WHERE Id = _point_type_id
   AND PartyId = _party_id
-  AND PointTypeId = _point_type_id
+ON CONFLICT (UserId, PartyId, PointTypeId) DO UPDATE
+  SET Value = users.Points.Value + _change_value
 $$;
