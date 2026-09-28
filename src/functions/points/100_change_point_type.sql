@@ -3,6 +3,7 @@ CREATE OR REPLACE FUNCTION change_point_type(
   _point_type_id INTEGER,
   _name TEXT,
   _description TEXT,
+  _start_value INTEGER,
   _is_public BOOLEAN,
   _is_shared BOOLEAN,
   _minimum INTEGER,
@@ -14,6 +15,7 @@ $$
 UPDATE party.PointTypes
 SET Name        = _name,
     Description = _description,
+    StartValue  = _start_value,
     IsPublic    = _is_public,
     IsShared    = _is_shared,
     Minimum     = _minimum,
