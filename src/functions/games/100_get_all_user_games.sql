@@ -1,5 +1,3 @@
-DROP FUNCTION IF EXISTS get_all_user_games(INTEGER);
-
 CREATE OR REPLACE FUNCTION get_all_user_games(
   _party_id INTEGER
 )

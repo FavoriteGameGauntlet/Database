@@ -1,5 +1,3 @@
-DROP FUNCTION IF EXISTS change_user_item_uses_left(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER);
-
 CREATE OR REPLACE FUNCTION change_user_item_uses_left(
   _user_id INTEGER,
   _party_id INTEGER,

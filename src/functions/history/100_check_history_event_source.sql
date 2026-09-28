@@ -26,8 +26,7 @@ BEGIN
 END;
 $$;
 
-DROP TRIGGER IF EXISTS check_history_event_source ON users.HistoryEvents;
-CREATE TRIGGER check_history_event_source
+CREATE OR REPLACE TRIGGER check_history_event_source
   BEFORE INSERT
   ON users.HistoryEvents
   FOR EACH ROW

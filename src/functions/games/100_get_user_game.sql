@@ -1,5 +1,3 @@
-DROP FUNCTION IF EXISTS get_user_game(INTEGER, INTEGER);
-
 CREATE OR REPLACE FUNCTION get_user_game(
   _user_id INTEGER,
   _party_id INTEGER
