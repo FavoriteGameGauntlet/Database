@@ -1,8 +1,6 @@
 INSERT INTO defaults.SystemParameters (Code, DefaultValue, Name, Description)
 VALUES ('MinimumNumberOfWishlistGames',        '3',       'MinimumNumberOfWishlistGames',        ''),
        ('TimerDurationInS',                    '30',      'TimerDurationInS',                    ''),
-       ('TerritoryHourChangeByTimer',          '2',       'TerritoryHourChangeByTimer',          ''),
-       ('ExperiencePointChangeByTimer',        '2',       'ExperiencePointChangeByTimer',        ''),
        ('ExperiencePointChangeByLevelUp',      '-10',     'ExperiencePointChangeByLevelUp',      ''),
        ('ShouldLimitFreePoints',               '1',       'ShouldLimitFreePoints',               ''),
        ('FreePointsMinimum',                   '0',       'FreePointsMinimum',                   ''),
@@ -13,7 +11,6 @@ VALUES ('MinimumNumberOfWishlistGames',        '3',       'MinimumNumberOfWishli
        ('EffectFinisherSchedulerIntervalInS',  '1',       'EffectFinisherSchedulerIntervalInS',  ''),
        ('MinimumAvailableRollCountForRoll',    '1',       'MinimumAvailableRollCountForRoll',    ''),
        ('MaximumAvailableRollCountForTimer',   '999',     'MaximumAvailableRollCountForTimer',   ''),
-       ('AvailableRollChangeByTimer',          '1',       'AvailableRollChangeByTimer',          ''),
        ('AvailableRollChangeByRoll',           '-1',      'AvailableRollChangeByRoll',           ''),
        ('FreePointChangeByBaseTeleport',       '-3',      'FreePointChangeByBaseTeleport',       ''),
        ('FreePointChangeBySandstorm',          '-1',      'FreePointChangeBySandstorm',          ''),

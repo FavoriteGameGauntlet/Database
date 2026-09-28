@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users.HistoryEvents (
 
   CHECK (
     (Type = 'point' AND Action = 'changed')
-      OR (Type IN ('exchange', 'wheel_row', 'manual') AND Action = 'added')
+      OR (Type IN ('exchange', 'wheel_row', 'manual', 'timer') AND Action = 'added')
       OR (Type IN ('effect', 'item', 'perk', 'game'))
     ),
 

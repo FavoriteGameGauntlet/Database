@@ -17,7 +17,7 @@ BEGIN
       RAISE EXCEPTION 'SourceEventId % not found in PartyId %', NEW.SourceEventId, NEW.PartyId;
     END IF;
 
-    IF _source_type NOT IN ('manual', 'wheel_row', 'exchange', 'effect', 'item', 'perk') THEN
+    IF _source_type NOT IN ('manual', 'wheel_row', 'exchange', 'effect', 'item', 'perk', 'timer') THEN
       RAISE EXCEPTION 'HistoryEvents % (Type=%) cannot be used as a source', NEW.SourceEventId, _source_type;
     END IF;
   END IF;
