@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS defaults.PointTypes (
   StartValue  INTEGER NOT NULL DEFAULT 0,
   IsPublic    BOOLEAN NOT NULL DEFAULT TRUE,
   IsShared    BOOLEAN NOT NULL DEFAULT FALSE,
-  Minimum     INTEGER NOT NULL DEFAULT 0,
-  Maximum     INTEGER NOT NULL DEFAULT 100,
+  Minimum     INTEGER DEFAULT 0,
+  Maximum     INTEGER,
 
   CHECK ( Minimum <= Maximum ),
   CHECK ( StartValue BETWEEN Minimum AND Maximum )
@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS party.PointTypes (
   StartValue  INTEGER NOT NULL DEFAULT 0,
   IsPublic    BOOLEAN NOT NULL DEFAULT TRUE,
   IsShared    BOOLEAN NOT NULL DEFAULT FALSE,
-  Minimum     INTEGER NOT NULL DEFAULT 0,
-  Maximum     INTEGER NOT NULL DEFAULT 100,
+  Minimum     INTEGER DEFAULT 0,
+  Maximum     INTEGER,
   IsRemoved   BOOLEAN NOT NULL DEFAULT FALSE,
 
   UNIQUE (Id, PartyId),
