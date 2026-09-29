@@ -5,7 +5,12 @@ CREATE OR REPLACE FUNCTION finish_user_game(
   _actor_user_id INTEGER,
   _source_event_id INTEGER
 )
-  RETURNS void
+  RETURNS TABLE (
+    id         INTEGER,
+    name       TEXT,
+    time_spent INTERVAL,
+    start_date TIMESTAMP
+  )
   LANGUAGE sql AS
 $$
 WITH
@@ -14,7 +19,7 @@ WITH
       WHERE UserId = _user_id
         AND PartyId = _party_id
         AND GameId = _game_id
-      RETURNING UserId, PartyId, TimeSpent),
+      RETURNING UserId, PartyId, GameId, TimeSpent, StartDate),
 
   history_event AS (
     INSERT INTO users.HistoryEvents (AffectedUserId, ActorUserId, PartyId, Type, Action, SourceEventId)
@@ -28,5 +33,7 @@ WITH
       FROM history_event he,
            deleted_game dg)
 
-SELECT 1
+SELECT g.Id, g.Name, dg.TimeSpent, dg.StartDate
+FROM deleted_game dg
+       INNER JOIN party.Games g ON g.Id = dg.GameId AND g.PartyId = dg.PartyId
 $$;
