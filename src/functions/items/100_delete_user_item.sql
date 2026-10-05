@@ -14,7 +14,7 @@ WITH
       WHERE UserId = _user_id
         AND PartyId = _party_id
         AND ItemId = _item_id
-      RETURNING UsesLeft),
+      RETURNING ItemId),
 
   history_event AS (
     INSERT INTO users.HistoryEvents (AffectedUserId, ActorUserId, PartyId, Type, Action, SourceEventId)
@@ -23,10 +23,9 @@ WITH
       RETURNING Id, PartyId),
 
   item_history AS (
-    INSERT INTO users.ItemHistory (Id, PartyId, ItemId, UsesLeft)
-      SELECT he.Id, he.PartyId, _item_id, di.UsesLeft
-      FROM history_event he,
-           deleted_item di)
+    INSERT INTO users.ItemHistory (Id, PartyId, ItemId)
+      SELECT he.Id, he.PartyId, _item_id
+      FROM history_event he)
 
 SELECT 1
 $$;
