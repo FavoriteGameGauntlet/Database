@@ -5,6 +5,7 @@ CREATE OR REPLACE FUNCTION get_effect_history(
   RETURNS TABLE (
     id               INTEGER,
     affected_user_id INTEGER,
+    actor_user_id    INTEGER,
     party_id         INTEGER,
     effect_id        INTEGER,
     name             TEXT,
@@ -21,6 +22,7 @@ AS
 $$
 SELECT eh.Id,
        he.AffectedUserId,
+       he.ActorUserId,
        eh.PartyId,
        eh.EffectId,
        e.Name,

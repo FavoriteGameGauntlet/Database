@@ -5,6 +5,7 @@ CREATE OR REPLACE FUNCTION get_item_history(
   RETURNS TABLE (
     id               INTEGER,
     affected_user_id INTEGER,
+    actor_user_id    INTEGER,
     party_id         INTEGER,
     item_id          INTEGER,
     action           TEXT,
@@ -17,6 +18,7 @@ AS
 $$
 SELECT ih.Id,
        he.AffectedUserId,
+       he.ActorUserId,
        ih.PartyId,
        ih.ItemId,
        he.Action,

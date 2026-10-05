@@ -5,6 +5,7 @@ CREATE OR REPLACE FUNCTION get_perk_history(
   RETURNS TABLE (
     id               INTEGER,
     affected_user_id INTEGER,
+    actor_user_id    INTEGER,
     party_id         INTEGER,
     perk_id          INTEGER,
     action           TEXT,
@@ -14,7 +15,7 @@ CREATE OR REPLACE FUNCTION get_perk_history(
   LANGUAGE sql
 AS
 $$
-SELECT ph.Id, he.AffectedUserId, ph.PartyId, ph.PerkId, he.Action, he.SourceEventId, he.CreatedDate
+SELECT ph.Id, he.AffectedUserId, he.ActorUserId, ph.PartyId, ph.PerkId, he.Action, he.SourceEventId, he.CreatedDate
 FROM users.PerkHistory ph
        INNER JOIN users.HistoryEvents he ON he.Id = ph.Id AND he.PartyId = ph.PartyId
 WHERE he.AffectedUserId = _user_id
