@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION get_item_history(
     actor_user_id    INTEGER,
     party_id         INTEGER,
     item_id          INTEGER,
+    name             TEXT,
+    use_count        INTEGER,
     action           TEXT,
     uses_left        INTEGER,
     source_event_id  INTEGER,
@@ -21,12 +23,15 @@ SELECT ih.Id,
        he.ActorUserId,
        ih.PartyId,
        ih.ItemId,
+       i.Name,
+       i.UseCount,
        he.Action,
        ih.UsesLeft,
        he.SourceEventId,
        he.CreatedDate
 FROM users.ItemHistory ih
        INNER JOIN users.HistoryEvents he ON he.Id = ih.Id AND he.PartyId = ih.PartyId
+       INNER JOIN party.Items i ON i.PartyId = ih.PartyId AND i.Id = ih.ItemId
 WHERE he.AffectedUserId = _user_id
   AND ih.PartyId = _party_id
 ORDER BY he.CreatedDate DESC
