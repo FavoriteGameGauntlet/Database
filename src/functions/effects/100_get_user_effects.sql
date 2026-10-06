@@ -27,21 +27,10 @@ SELECT ue.Id,
        e.UseCount,
        ue.UsesLeft,
        e.Duration,
-       he.CreatedDate,
+       ue.StartedDate,
        get_user_effect_point_modifiers_jsonb(ue.PartyId, ue.Id)
 FROM users.Effects ue
        INNER JOIN party.Effects e ON e.PartyId = ue.PartyId AND e.Id = ue.EffectId
-       INNER JOIN LATERAL (
-  SELECT he.CreatedDate
-  FROM users.EffectHistory eh
-         INNER JOIN users.HistoryEvents he ON he.Id = eh.Id AND he.PartyId = eh.PartyId
-  WHERE eh.PartyId = ue.PartyId
-    AND eh.EffectId = ue.EffectId
-    AND he.AffectedUserId = ue.UserId
-    AND he.Action = 'added'
-  ORDER BY he.CreatedDate DESC
-  LIMIT 1
-  ) he ON TRUE
 WHERE ue.UserId = _user_id
   AND ue.PartyId = _party_id
 $$;
