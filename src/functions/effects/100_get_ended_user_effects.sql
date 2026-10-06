@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION delete_ended_user_effects(
+CREATE OR REPLACE FUNCTION get_ended_user_effects(
 )
   RETURNS TABLE (
     id        INTEGER,
@@ -10,12 +10,10 @@ CREATE OR REPLACE FUNCTION delete_ended_user_effects(
   LANGUAGE sql
 AS
 $$
-DELETE
+SELECT ue.Id, ue.UserId, ue.PartyId, ue.EffectId, ue.UsesLeft
 FROM users.Effects ue
-  USING party.Effects e
-WHERE e.Id = ue.EffectId
-  AND e.PartyId = ue.PartyId
-  AND e.Duration IS NOT NULL
+       INNER JOIN party.Effects e ON e.Id = ue.EffectId AND e.PartyId = ue.PartyId
+WHERE e.Duration IS NOT NULL
   AND (SELECT he.CreatedDate
        FROM users.EffectHistory eh
               INNER JOIN users.HistoryEvents he ON he.Id = eh.Id AND he.PartyId = eh.PartyId
@@ -25,5 +23,4 @@ WHERE e.Id = ue.EffectId
          AND he.Action = 'added'
        ORDER BY he.CreatedDate DESC
        LIMIT 1) + e.Duration <= NOW()
-RETURNING ue.Id, ue.UserId, ue.PartyId, ue.EffectId, ue.UsesLeft
 $$;
