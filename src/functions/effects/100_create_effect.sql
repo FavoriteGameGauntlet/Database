@@ -4,7 +4,8 @@ CREATE OR REPLACE FUNCTION create_effect(
   _description TEXT,
   _use_count INTEGER,
   _duration INTERVAL,
-  _change JSONB
+  _change JSONB,
+  _modifiers JSONB
 )
   RETURNS TABLE (
     effect_id   INTEGER,
@@ -25,7 +26,12 @@ WITH
     INSERT INTO party.Effects (PartyId, Name, Description, UseCount, Duration, ChangeId)
       VALUES (_party_id, _name, _description, _use_count, _duration,
               ((SELECT data FROM change) ->> 'change_id')::integer)
-      RETURNING Id, PartyId, Name, Description, UseCount, Duration)
+      RETURNING Id, PartyId, Name, Description, UseCount, Duration),
+
+  modifiers AS (
+    INSERT INTO party.EffectPointModifiers (PartyId, EffectId, PointTypeId, Amount)
+      SELECT _party_id, (SELECT Id FROM effect), m.point_type_id, m.amount
+      FROM jsonb_to_recordset(_modifiers) AS m (point_type_id INTEGER, amount INTEGER))
 SELECT ef.Id,
        ef.PartyId,
        ef.Name,
