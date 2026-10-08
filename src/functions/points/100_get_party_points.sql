@@ -11,6 +11,6 @@ CREATE OR REPLACE FUNCTION get_party_points(
 AS
 $$
 SELECT Id, PartyId, PointTypeId, Value
-FROM party.Points
+FROM shared.Points
 WHERE PartyId = _party_id
 $$;

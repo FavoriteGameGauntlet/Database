@@ -7,3 +7,6 @@ CREATE TABLE IF NOT EXISTS users.WheelRowHistory (
   FOREIGN KEY (Id, PartyId) REFERENCES users.HistoryEvents (Id, PartyId),
   FOREIGN KEY (WheelRowId, PartyId) REFERENCES party.WheelRows (Id, PartyId)
 );
+
+CREATE INDEX IF NOT EXISTS WheelRowHistoryWheelRowIdPartyIdIdx
+  ON users.WheelRowHistory (WheelRowId, PartyId);

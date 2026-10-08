@@ -4,10 +4,10 @@ CREATE OR REPLACE FUNCTION get_user_point_history(
 )
   RETURNS TABLE (
     id                   INTEGER,
-    user_id              INTEGER,
+    affected_user_id     INTEGER,
     party_id             INTEGER,
     point_type_id        INTEGER,
-    source_user_id       INTEGER,
+    actor_user_id        INTEGER,
     desired_change_value INTEGER,
     actual_change_value  INTEGER,
     final_value          INTEGER,
@@ -18,10 +18,10 @@ CREATE OR REPLACE FUNCTION get_user_point_history(
 AS
 $$
 SELECT ph.Id,
-       he.UserId,
+       he.AffectedUserId,
        ph.PartyId,
        ph.PointTypeId,
-       ph.SourceUserId,
+       he.ActorUserId,
        ph.DesiredChangeValue,
        ph.ActualChangeValue,
        ph.FinalValue,
@@ -29,7 +29,7 @@ SELECT ph.Id,
        he.CreatedDate
 FROM users.PointHistory ph
        INNER JOIN users.HistoryEvents he ON he.Id = ph.Id AND he.PartyId = ph.PartyId
-WHERE he.UserId = _user_id
+WHERE he.AffectedUserId = _user_id
   AND ph.PartyId = _party_id
 ORDER BY he.CreatedDate DESC
 $$;

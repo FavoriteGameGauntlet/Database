@@ -3,19 +3,19 @@ CREATE OR REPLACE FUNCTION get_exchange_history(
   _party_id INTEGER
 )
   RETURNS TABLE (
-    id          INTEGER,
-    user_id     INTEGER,
-    party_id    INTEGER,
-    exchange_id INTEGER,
-    name        TEXT,
-    description TEXT,
-    used_date   TIMESTAMP
+    id               INTEGER,
+    affected_user_id INTEGER,
+    party_id         INTEGER,
+    exchange_id      INTEGER,
+    name             TEXT,
+    description      TEXT,
+    used_date        TIMESTAMP
   )
   LANGUAGE sql
 AS
 $$
 SELECT eh.Id,
-       he.UserId,
+       he.AffectedUserId,
        eh.PartyId,
        eh.ExchangeId,
        e.Name,
@@ -24,7 +24,7 @@ SELECT eh.Id,
 FROM users.ExchangeHistory eh
        INNER JOIN users.HistoryEvents he ON he.Id = eh.Id AND he.PartyId = eh.PartyId
        INNER JOIN party.Exchanges e ON e.PartyId = eh.PartyId AND e.Id = eh.ExchangeId
-WHERE he.UserId = _user_id
+WHERE he.AffectedUserId = _user_id
   AND eh.PartyId = _party_id
 ORDER BY he.CreatedDate DESC
 $$;

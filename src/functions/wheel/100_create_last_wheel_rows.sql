@@ -1,8 +1,7 @@
-CREATE OR REPLACE FUNCTION create_last_wheel_row(
+CREATE OR REPLACE FUNCTION create_last_wheel_rows(
   _user_id INTEGER,
   _party_id INTEGER,
-  _wheel_row_id INTEGER,
-  _position INTEGER
+  _wheel_rows JSONB
 )
   RETURNS TABLE (
     id             INTEGER,
@@ -16,6 +15,10 @@ CREATE OR REPLACE FUNCTION create_last_wheel_row(
 AS
 $$
 INSERT INTO users.LastWheelRows (UserId, PartyId, WheelRowId, Position)
-VALUES (_user_id, _party_id, _wheel_row_id, _position)
+SELECT _user_id,
+       _party_id,
+       (row_entry ->> 'wheel_row_id')::integer,
+       (row_entry ->> 'position')::integer
+FROM jsonb_array_elements(_wheel_rows) AS row_entry
 RETURNING Id, UserId, PartyId, WheelRowId, Position, RolledDate
 $$;

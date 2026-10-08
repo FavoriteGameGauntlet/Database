@@ -4,18 +4,15 @@ CREATE OR REPLACE FUNCTION get_game_review(
   _game_id INTEGER
 )
   RETURNS TABLE (
+    rating         INTEGER,
     review_comment TEXT
   )
   LANGUAGE sql
 AS
 $$
-SELECT gh.ReviewComment
-FROM users.GameHistory gh
-       INNER JOIN users.HistoryEvents he ON he.Id = gh.Id AND he.PartyId = gh.PartyId
-WHERE he.UserId = _user_id
-  AND gh.PartyId = _party_id
-  AND gh.GameId = _game_id
-  AND gh.ReviewComment IS NOT NULL
-ORDER BY he.CreatedDate DESC
-LIMIT 1
+SELECT gr.Rating, gr.ReviewComment
+FROM users.GameRatings gr
+WHERE gr.UserId = _user_id
+  AND gr.PartyId = _party_id
+  AND gr.GameId = _game_id
 $$;

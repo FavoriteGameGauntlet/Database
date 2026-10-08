@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS defaults.Items (
   Id          SERIAL PRIMARY KEY,
   Name        TEXT    NOT NULL UNIQUE,
   Description TEXT,
-  UseCount    INTEGER NOT NULL DEFAULT 1,
+  UseCount    INTEGER CHECK ( UseCount IS NULL OR UseCount > 0 ),
   ChangeId    INTEGER REFERENCES defaults.Changes (Id)
 );
 
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS party.Items (
   PartyId     INTEGER NOT NULL REFERENCES common.Parties (Id),
   Name        TEXT    NOT NULL,
   Description TEXT,
-  UseCount    INTEGER NOT NULL DEFAULT 1,
+  UseCount    INTEGER CHECK ( UseCount IS NULL OR UseCount > 0 ),
   ChangeId    INTEGER,
   IsRemoved   BOOLEAN NOT NULL DEFAULT FALSE,
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS users.Items (
   UserId       INTEGER   NOT NULL REFERENCES common.Users (Id),
   PartyId      INTEGER   NOT NULL REFERENCES common.Parties (Id),
   ItemId       INTEGER   NOT NULL,
-  UsesLeft     INTEGER   NOT NULL CHECK ( UsesLeft > 0 ),
+  UsesLeft     INTEGER   CHECK ( UsesLeft IS NULL OR UsesLeft > 0 ),
   ReceivedDate TIMESTAMP NOT NULL DEFAULT NOW(),
 
   UNIQUE (UserId, PartyId, ItemId),

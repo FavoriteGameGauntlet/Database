@@ -1,5 +1,6 @@
-CREATE OR REPLACE FUNCTION get_wheel_groups(
-  _party_id INTEGER
+CREATE OR REPLACE FUNCTION get_game_by_name(
+  _party_id INTEGER,
+  _name TEXT
 )
   RETURNS TABLE (
     id       INTEGER,
@@ -10,7 +11,7 @@ CREATE OR REPLACE FUNCTION get_wheel_groups(
 AS
 $$
 SELECT Id, PartyId, Name
-FROM party.WheelGroups
+FROM party.Games
 WHERE PartyId = _party_id
-  AND NOT IsRemoved
+  AND Name = _name
 $$;

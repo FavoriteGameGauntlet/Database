@@ -2,14 +2,32 @@ CREATE OR REPLACE FUNCTION change_user_item_uses_left(
   _user_id INTEGER,
   _party_id INTEGER,
   _item_id INTEGER,
-  _uses_left INTEGER
+  _uses_left INTEGER,
+  _actor_user_id INTEGER,
+  _source_event_id INTEGER
 )
-  RETURNS void
+  RETURNS INTEGER
   LANGUAGE sql AS
 $$
-UPDATE users.Items
-SET UsesLeft = _uses_left
-WHERE UserId = _user_id
-  AND PartyId = _party_id
-  AND ItemId = _item_id
+WITH
+  history_event AS (
+    INSERT INTO users.HistoryEvents (AffectedUserId, ActorUserId, PartyId, Type, Action, SourceEventId)
+      VALUES (_user_id, _actor_user_id, _party_id, 'item', 'changed', _source_event_id)
+      RETURNING Id, PartyId),
+
+  item_history AS (
+    INSERT INTO users.ItemHistory (Id, PartyId, ItemId, UsesLeft)
+      SELECT he.Id, he.PartyId, _item_id, _uses_left
+      FROM history_event he),
+
+  updated_item AS (
+    UPDATE users.Items
+      SET UsesLeft = _uses_left
+      WHERE UserId = _user_id
+        AND PartyId = _party_id
+        AND ItemId = _item_id
+        AND _uses_left > 0)
+
+SELECT Id
+FROM history_event
 $$;

@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS users.ManualHistory (
   Id       INTEGER PRIMARY KEY,
   PartyId  INTEGER NOT NULL REFERENCES common.Parties (Id),
-  UserId   INTEGER NOT NULL REFERENCES common.Users (Id),
   ChangeId INTEGER NOT NULL,
 
   UNIQUE (Id, PartyId),

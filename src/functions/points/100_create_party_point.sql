@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION create_party_point(
   LANGUAGE sql
 AS
 $$
-INSERT INTO party.Points (PartyId, PointTypeId, Value)
+INSERT INTO shared.Points (PartyId, PointTypeId, Value)
 VALUES (_party_id, _point_type_id, _value)
 RETURNING Id, PartyId, PointTypeId, Value
 $$;
