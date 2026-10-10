@@ -22,17 +22,18 @@ WITH
       VALUES (_user_id, _actor_user_id, _party_id, 'effect', 'added', _source_event_id)
       RETURNING Id, AffectedUserId, PartyId),
 
-  effect_history AS (
-    INSERT INTO users.EffectHistory (Id, PartyId, EffectId)
-      SELECT he.Id, he.PartyId, _effect_id
-      FROM history_event he),
-
   user_effect AS (
     INSERT INTO users.Effects (UserId, PartyId, EffectId, UsesLeft)
       SELECT he.AffectedUserId, he.PartyId, _effect_id, e.UseCount
       FROM history_event he
              INNER JOIN party.Effects e ON e.Id = _effect_id AND e.PartyId = he.PartyId
       RETURNING Id, UserId, PartyId, EffectId, UsesLeft),
+
+  effect_history AS (
+    INSERT INTO users.EffectHistory (Id, PartyId, EffectId, UserEffectId)
+      SELECT he.Id, he.PartyId, ue.EffectId, ue.Id
+      FROM history_event he
+             CROSS JOIN user_effect ue),
 
   point_modifiers AS (
     INSERT INTO users.EffectPointModifiers (UserId, PartyId, PointTypeId, UserEffectId, Amount)

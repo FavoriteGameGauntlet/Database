@@ -30,6 +30,5 @@ CREATE TABLE IF NOT EXISTS users.Items (
   UsesLeft     INTEGER   CHECK ( UsesLeft IS NULL OR UsesLeft > 0 ),
   ReceivedDate TIMESTAMP NOT NULL DEFAULT NOW(),
 
-  UNIQUE (UserId, PartyId, ItemId),
   FOREIGN KEY (ItemId, PartyId) REFERENCES party.Items (Id, PartyId)
 );

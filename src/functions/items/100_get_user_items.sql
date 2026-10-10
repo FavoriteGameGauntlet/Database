@@ -3,6 +3,8 @@ CREATE OR REPLACE FUNCTION get_user_items(
   _party_id INTEGER
 )
   RETURNS TABLE (
+    id            INTEGER,
+    item_id       INTEGER,
     name          TEXT,
     description   TEXT,
     uses_left     INTEGER,
@@ -12,7 +14,7 @@ CREATE OR REPLACE FUNCTION get_user_items(
   LANGUAGE sql
 AS
 $$
-SELECT i.Name, i.Description, ui.UsesLeft, ui.ReceivedDate, i.ChangeId
+SELECT ui.Id, ui.ItemId, i.Name, i.Description, ui.UsesLeft, ui.ReceivedDate, i.ChangeId
 FROM users.Items ui
        INNER JOIN party.Items i ON i.PartyId = ui.PartyId AND i.Id = ui.ItemId
 WHERE ui.UserId = _user_id

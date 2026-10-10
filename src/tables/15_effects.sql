@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS users.Effects (
   UsesLeft    INTEGER CHECK ( UsesLeft IS NULL OR UsesLeft > 0 ),
   StartedDate TIMESTAMP NOT NULL DEFAULT NOW(),
 
-  UNIQUE (UserId, PartyId, EffectId),
   UNIQUE (Id, PartyId),
   FOREIGN KEY (EffectId, PartyId) REFERENCES party.Effects (Id, PartyId)
 );
