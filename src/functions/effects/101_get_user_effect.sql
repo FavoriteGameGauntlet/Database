@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION get_user_effect(
   _user_id INTEGER,
   _party_id INTEGER,
-  _effect_id INTEGER
+  _user_effect_id INTEGER
 )
   RETURNS TABLE (
     id           INTEGER,
@@ -32,7 +32,7 @@ SELECT ue.Id,
        get_user_effect_point_modifiers_jsonb(ue.PartyId, ue.Id)
 FROM users.Effects ue
        INNER JOIN party.Effects e ON e.PartyId = ue.PartyId AND e.Id = ue.EffectId
-WHERE ue.UserId = _user_id
+WHERE ue.Id = _user_effect_id
+  AND ue.UserId = _user_id
   AND ue.PartyId = _party_id
-  AND ue.EffectId = _effect_id
 $$;

@@ -22,16 +22,19 @@ WITH
       VALUES (_user_id, _actor_user_id, _party_id, 'item', 'added', _source_event_id)
       RETURNING Id, AffectedUserId, PartyId),
 
-  item_history AS (
-    INSERT INTO users.ItemHistory (Id, PartyId, ItemId, UsesLeft)
-      SELECT he.Id, he.PartyId, _item_id, i.UseCount
+  user_item AS (
+    INSERT INTO users.Items (UserId, PartyId, ItemId, UsesLeft)
+      SELECT he.AffectedUserId, he.PartyId, _item_id, i.UseCount
       FROM history_event he
-             INNER JOIN party.Items i ON i.Id = _item_id AND i.PartyId = he.PartyId)
+             INNER JOIN party.Items i ON i.Id = _item_id AND i.PartyId = he.PartyId
+      RETURNING Id, UserId, PartyId, ItemId, UsesLeft, ReceivedDate),
 
-INSERT
-INTO users.Items (UserId, PartyId, ItemId, UsesLeft)
-SELECT he.AffectedUserId, he.PartyId, _item_id, i.UseCount
-FROM history_event he
-       INNER JOIN party.Items i ON i.Id = _item_id AND i.PartyId = he.PartyId
-RETURNING Id, UserId, PartyId, ItemId, UsesLeft, ReceivedDate
+  item_history AS (
+    INSERT INTO users.ItemHistory (Id, PartyId, ItemId, UserItemId, UsesLeft)
+      SELECT he.Id, he.PartyId, ui.ItemId, ui.Id, ui.UsesLeft
+      FROM history_event he
+             CROSS JOIN user_item ui)
+
+SELECT Id, UserId, PartyId, ItemId, UsesLeft, ReceivedDate
+FROM user_item
 $$;
